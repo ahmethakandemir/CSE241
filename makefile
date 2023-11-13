@@ -4,7 +4,7 @@ clear:
 	clear
 
 compile:
-	@g++ deneme.cpp
+	@g++ quiz.cpp
 run:
 	@./a.out
 clean:
