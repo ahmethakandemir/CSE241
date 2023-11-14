@@ -10,6 +10,10 @@ Piece::Piece(int value, int x, int y) : value(value), x(x), y(y){
     setSymbol();
 }
 
+Piece::Piece(int value, int x, int y, int point) : value(value), x(x), y(y), point(point){
+    setSymbol();
+}
+
 const int Piece::getValue(){
     return value;
 }
@@ -53,10 +57,10 @@ void Piece::setSymbol(){
             symbol = 'B';
             break;
         case 5:
-            symbol = 'Q';
+            symbol = 'K';
             break;
         case 6:
-            symbol = 'K';
+            symbol = 'Q';
             break;
         //black Piece starting from 11 to avoid confusion
         case 11:
@@ -72,16 +76,14 @@ void Piece::setSymbol(){
             symbol = 'b';
             break;
         case 15:
-            symbol = 'q';
+            symbol = 'k';
             break;
         case 16:
-            symbol = 'k';
+            symbol = 'q';
             break;
         default:
             symbol = 'e';
             break;
-    
-    
     
     }
 
@@ -90,6 +92,8 @@ void Piece::setSymbol(){
 void Piece::outSymbol(){
     cout << symbol << endl;
 }
+
+
 
 std::ostream& operator<<(std::ostream& out, const Piece& other)
 {
@@ -104,11 +108,14 @@ Board::Board(){
 
 void Board::printBoard(){
     for(int i = 8; i > 0; i--){
+        cout << i << "  |  ";
         for(int j = 8; j > 0; j--){
             cout << board[i][j] << "  ";
         }
         cout << endl;
     }
+    cout << "    -------------------------" <<endl;
+    cout << "      a  b  c  d  e  f  g  h" << endl;
 }
 
 void Board::initBoard(){
@@ -120,26 +127,26 @@ void Board::initBoard(){
     for(int i = 1; i < 9; i++){
         board[2][i] = Piece(1, i, 2);
     }
-    board[1][1] = Piece(2, 1, 1);
-    board[1][2] = Piece(3, 2, 1);
-    board[1][3] = Piece(4, 3, 1);
-    board[1][4] = Piece(5, 4, 1);
-    board[1][5] = Piece(6, 5, 1);
-    board[1][6] = Piece(4, 6, 1);
-    board[1][7] = Piece(3, 7, 1);
-    board[1][8] = Piece(2, 8, 1);
+    board[1][1] = Piece(2, 1, 1, 5);
+    board[1][2] = Piece(3, 2, 1, 3);
+    board[1][3] = Piece(4, 3, 1, 3);
+    board[1][4] = Piece(5, 4, 1, 9);
+    board[1][5] = Piece(6, 5, 1, 999);
+    board[1][6] = Piece(4, 6, 1, 3);
+    board[1][7] = Piece(3, 7, 1, 3);
+    board[1][8] = Piece(2, 8, 1, 5);
     //set up black pieces
     for(int i = 1; i < 9; i++){
         board[7][i] = Piece(11, i, 7);
     }
-    board[8][1] = Piece(12, 1, 8);
-    board[8][2] = Piece(13, 2, 8);
-    board[8][3] = Piece(14, 3, 8);
-    board[8][4] = Piece(15, 4, 8);
-    board[8][5] = Piece(16, 5, 8);
-    board[8][6] = Piece(14, 6, 8);
-    board[8][7] = Piece(13, 7, 8);
-    board[8][8] = Piece(12, 8, 8);
+    board[8][1] = Piece(12, 1, 8, 5);
+    board[8][2] = Piece(13, 2, 8, 3);
+    board[8][3] = Piece(14, 3, 8, 3);
+    board[8][4] = Piece(15, 4, 8, 9);
+    board[8][5] = Piece(16, 5, 8, 999);
+    board[8][6] = Piece(14, 6, 8, 3);
+    board[8][7] = Piece(13, 7, 8, 3);
+    board[8][8] = Piece(12, 8, 8, 5);
     //set up empty spaces
     for(int i = 3; i < 7; i++){
         for(int j = 1; j < 9; j++){

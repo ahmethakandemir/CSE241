@@ -8,6 +8,7 @@ class Piece{
 public:
     Piece();
     Piece(int value, int x, int y);
+    Piece(int value, int x, int y, int point);
     const int getValue();
     int getX();
     int getY();
@@ -19,6 +20,7 @@ public:
     friend ostream& operator<<(ostream& out, const Piece& other);
 
 private:
+    int point;
     int value;
     void setSymbol();
     char symbol;
