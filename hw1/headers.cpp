@@ -4,20 +4,24 @@
 
 using namespace std;
 
+
 class Piece{
 public:
+    friend class Board;
     Piece();
+    Piece(int x, int y);
     Piece(int value, int x, int y);
     Piece(int value, int x, int y, int point);
     const int getValue();
     int getX();
     int getY();
-    char getSymbol();
     void setX(int x);
     void setY(int y);
     void outSymbol();
     char getSymbol() const;
     friend ostream& operator<<(ostream& out, const Piece& other);
+    Piece operator =(const Piece& other);
+    void move(int x, int y);
 
 private:
     int point;
@@ -31,14 +35,21 @@ private:
 
 class Board{
 public:
-    friend Piece;
+    friend class Piece;
     Board();
     void printBoard();
     void initBoard();
-    // void movePiece(int x1, int y1, int x2, int y2);
+    int modifyMove(char x);
+    int game();
 
 private:
     vector<vector<Piece>> board;
+    void updateBoard();
+    Piece getPiece(int x, int y);
+    void input();
+    bool inputValidity(string input);
+    bool moveValidity(int x1, int y1, int x2, int y2);
+
 
 };
 
