@@ -69,7 +69,7 @@ private:
     vector<vector<Piece>> board;
     //void updateBoard();
     Piece getPiece(int x, int y);
-    void inputAndMove();
+    void inputAndMove(User p1white, User p2black);
     bool inputValidity(string input);
     bool moveValidity(int x1, int y1, int x2, int y2);
 
