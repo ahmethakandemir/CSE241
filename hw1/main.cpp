@@ -25,7 +25,7 @@ Piece::Piece(char symbol, int x, int y, int point) : symbol(symbol), x(x), y(y),
 }
 
 Board::User::User(bool color) : color(color){
-    score = 0; //39 is the sum of all the pieces
+    score = 39; //39 is the sum of all the pieces
 }
 
 bool Board::User::turn = true;
@@ -554,20 +554,14 @@ void Board::goodnessScore(User &p1white, User &p2black){
         for(int y1 = 1; y1 <= 8; y1++){
             for(int i = 1; i <= 8; i++){
                 for (int k = 1; k <= 8; k++){
-                    if(moveValidity(i,k,x1,y1) == true){
-                        board[x1][y1].isUnderAttack = true;
-                        if(board[x1][y1].getColor() == true)
-                            whiteScore += (board[x1][y1].point / 2);
-                        else if (board[x1][y1].getColor() == false){
-                            blackScore += (board[x1][y1].point / 2);
-                        }
-                    }
-                    else{
-                        board[x1][y1].isUnderAttack = false;
-                        if(board[x1][y1].getColor() == true)
-                            whiteScore += (board[x1][y1].point);
-                        else if (board[x1][y1].getColor() == false){
-                            blackScore += (board[x1][y1].point);
+                    if(board[x1][y1].isUnderAttack == false){
+                        if(moveValidity(i,k,x1,y1) == true){
+                            board[x1][y1].isUnderAttack = true;
+                            if(board[x1][y1].getColor() == true)
+                                whiteScore += (board[x1][y1].point / 2);
+                            else if (board[x1][y1].getColor() == false){
+                                blackScore += (board[x1][y1].point / 2);
+                            }
                         }
                     }
                 }
@@ -587,10 +581,10 @@ int Board::game(){
 
     while(true){
         inputAndMove();
-        goodnessScore(p1white,p2black);
         User::changeTurn();
+        goodnessScore(p1white, p2black);
         printBoard();
-        cout << "white : "<< p1white.getScore() << "black : " << p2black.getScore() << endl; 
+        cout << "\nwhite : "<< p1white.getScore() << "  --  black : " << p2black.getScore() << endl; 
 
 
 
