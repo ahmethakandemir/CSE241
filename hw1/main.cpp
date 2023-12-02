@@ -41,7 +41,7 @@ const char Piece::getSymbol()const{
     return symbol;
 }
 
-const int Piece::getPoint(){
+const double Piece::getPoint(){
     return point;
 }
 
@@ -223,6 +223,9 @@ bool Board::moveValidity(int x1, int y1, int x2, int y2)
     }
     //check if the piece is the right color
     if(User::getTurn() != board[x1][y1].getColor()){
+        return false;
+    }
+    if((board[x2][y2].getSymbol() != '.') && (board[x1][y1].getColor() == board[x2][y2].getColor())){
         return false;
     }
     switch(board[x1][y1].getSymbol()){
@@ -484,8 +487,9 @@ Board::Board(){
     initBoard();
 }
 
-void Board::printBoard(){
-
+void Board::printBoard(User p1, User p2){
+    cout << "\n       White : "<< p1.getScore() << "  --  Black : " << p2.getScore() << endl; 
+        
     //cout << board[6][8] << endl;
     cout << "   -----------------------------------" <<endl;
 
@@ -516,25 +520,25 @@ void Board::initBoard(){
     }
     //set up white pieces
     for(int i = 1; i < 9; i++){
-        board[i][2] = Piece('P', i, 2);
+        board[i][2] = Piece('P', i, 2, 1);
     }
     board[1][1] = Piece('R', 1, 1, 5);
     board[2][1] = Piece('N', 2, 1, 3);
     board[3][1] = Piece('B', 3, 1, 3);
     board[4][1] = Piece('Q', 4, 1, 9);
-    board[5][1] = Piece('K', 5, 1, 999);
+    board[5][1] = Piece('K', 5, 1, 0);
     board[6][1] = Piece('B', 6, 1, 3);
     board[7][1] = Piece('N', 7, 1, 3);
     board[8][1] = Piece('R', 8, 1, 5);
     //set up black pieces
     for(int i = 1; i < 9; i++){
-        board[i][7] = Piece('p', i, 7);
+        board[i][7] = Piece('p', i, 7, 1);
     }
     board[1][8] = Piece('r', 1, 8, 5);
     board[2][8] = Piece('n', 2, 8, 3);
     board[3][8] = Piece('b', 3, 8, 3);
     board[4][8] = Piece('q', 4, 8, 9);
-    board[5][8] = Piece('k', 5, 8, 999);
+    board[5][8] = Piece('k', 5, 8, 0);
     board[6][8] = Piece('b', 6, 8, 3);
     board[7][8] = Piece('n', 7, 8, 3);
     board[8][8] = Piece('r', 8, 8, 5);
@@ -549,23 +553,63 @@ void Board::initBoard(){
 void Board::goodnessScore(User &p1white, User &p2black){
 
     double whiteScore = 0, blackScore = 0;
-
+    // cout << "inside" << endl;
     for(int x1 = 1; x1 <= 8; x1++){
         for(int y1 = 1; y1 <= 8; y1++){
             for(int i = 1; i <= 8; i++){
                 for (int k = 1; k <= 8; k++){
-                    if(board[x1][y1].isUnderAttack == false){
-                        if(moveValidity(i,k,x1,y1) == true){
+                    if(moveValidity(i,k,x1,y1)){
+                        if(board[x1][y1].getSymbol() != '.'){
                             board[x1][y1].isUnderAttack = true;
-                            if(board[x1][y1].getColor() == true)
-                                whiteScore += (board[x1][y1].point / 2);
-                            else if (board[x1][y1].getColor() == false){
-                                blackScore += (board[x1][y1].point / 2);
-                            }
+                            cout <<"under attack : "<< x1 << " " << y1 << " by: " << i << " " << k << endl;
                         }
+                    }
+                    User::changeTurn();
+                    if(moveValidity(i,k,x1,y1)){
+                        if(board[x1][y1].getSymbol() != '.'){
+                            board[x1][y1].isUnderAttack = true;
+                            cout <<"under attack : "<< x1 << " " << y1 << " by: " << i << " " << k << endl;
+                        }
+                    }
+
+                    else{
+                        board[x1][y1].isUnderAttack == false;
                     }
                 }
             }
+        }
+    }
+    for(int x1 = 1; x1 <= 8; x1++){
+        for(int y1 = 1; y1 <= 8; y1++){
+            if((board[x1][y1].getColor() == true) && (board[x1][y1].getSymbol() != '.')){
+                if(board[x1][y1].isUnderAttack == true){
+
+                    // cout << "asil point to white : " << board[x1][y1].point << endl;
+                    whiteScore += (board[x1][y1].point / 2);
+                    // cout << "added point to white : " << board[x1][y1].point / 2 << endl;
+                }
+                else if((board[x1][y1].isUnderAttack == false) && (board[x1][y1].getSymbol() != '.')){
+                    whiteScore += board[x1][y1].point;
+                    // cout << "added point to white : " << board[x1][y1].point << endl;
+                }
+            }
+            else if((board[x1][y1].getColor() == false) && (board[x1][y1].getSymbol() != '.')){
+                if(board[x1][y1].isUnderAttack == true){
+                    // cout << "asil point to black : " << board[x1][y1].point << endl;
+                    blackScore += (board[x1][y1].point / 2);
+                    // cout << "added point to black : " << board[x1][y1].point / 2 << endl;
+                }
+                else if((board[x1][y1].isUnderAttack == false) && (board[x1][y1].getSymbol() != '.')){
+                    blackScore += board[x1][y1].point;
+                    // cout << "added point to black : " << board[x1][y1].point << endl;
+                }
+            }
+        }
+    }
+
+    for(int x1 = 1; x1 <= 8; x1++){
+        for(int y1 = 1; y1 <= 8; y1++){
+            board[x1][y1].isUnderAttack = false;
         }
     }
 
@@ -575,19 +619,15 @@ void Board::goodnessScore(User &p1white, User &p2black){
 
 int Board::game(){
 
-    printBoard();
     User p1white(false);
     User p2black(true);
+    printBoard(p1white,p2black);
 
     while(true){
         inputAndMove();
         User::changeTurn();
         goodnessScore(p1white, p2black);
-        printBoard();
-        cout << "\nwhite : "<< p1white.getScore() << "  --  black : " << p2black.getScore() << endl; 
-
-
-
+        printBoard(p1white,p2black);
     }
     return 0;
 

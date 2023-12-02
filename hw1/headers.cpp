@@ -16,7 +16,7 @@ public:
     Piece(char symbol, int x, int y);
     Piece(char symbol, int x, int y, int point);
     Piece(const Piece& other);
-    const int getPoint();
+    const double getPoint();
     int getX();
     int getY();
     void setX(int x);
@@ -55,7 +55,7 @@ public:
     };
     friend class Piece;
     Board();
-    void printBoard();
+    void printBoard(User p1,User p2);
     void initBoard();
     int modifyMove(char x);
     int game();
