@@ -128,6 +128,25 @@ Piece Piece::operator=(const Piece& other){
     return *this;
 }
 
+const bool Board::kingSafety(const User &player)const {
+
+    for(int i = 1; i <= 8; i++){
+        for(int j = 1; j <= 8; j++){
+            if(player.getColor() == true && board[i][j].getSymbol() == 'K'){
+                if(board[i][j].isUnderAttack == true){
+                    return false;
+                }
+            }
+            else if(player.getColor() == false && board[i][j].getSymbol() == 'k'){
+                if(board[i][j].isUnderAttack == true){
+                    return false;
+                }
+            } 
+        }
+    }
+    return true;
+}
+
 struct Board::LastMove{
     int x1;
     int y1;
@@ -242,11 +261,11 @@ bool Board::moveValidity(int x1, int y1, int x2, int y2)
                 return true;
             }
             // else if statement for en passant
-            else if((x1 == x2 + 1 || x1 == x2 - 1) && y2 == y1 + 1 && (x1 == lastmove.x2 + 1 || x1 == lastmove.x2 - 1) && y1 == lastmove.y2 && lastmove.symbol == 'p'){
-                board[lastmove.x2][lastmove.y2] = Piece(lastmove.x2, lastmove.y2);
-                //////////////////////////////////////////////////////////////////////pawn captured dont forget this
-                return true;
-            }
+            // else if((x1 == x2 + 1 || x1 == x2 - 1) && y2 == y1 + 1 && (x1 == lastmove.x2 + 1 || x1 == lastmove.x2 - 1) && y1 == lastmove.y2 && lastmove.symbol == 'p'){
+            //     board[lastmove.x2][lastmove.y2] = Piece(lastmove.x2, lastmove.y2);
+            //     //////////////////////////////////////////////////////////////////////pawn captured dont forget this
+            //     return true;
+            // }
             else{
                 return false;
             }
@@ -264,11 +283,11 @@ bool Board::moveValidity(int x1, int y1, int x2, int y2)
                 return true;
             }
             // enpassant code just like for white pawns
-            else if((x1 == x2 + 1 || x1 == x2 - 1) && y2 == y1 - 1 && (x1 == lastmove.x2 + 1 || x1 == lastmove.x2 - 1) && y1 == lastmove.y2 && lastmove.symbol == 'P'){
-                board[lastmove.x2][lastmove.y2] = Piece(lastmove.x2, lastmove.y2);
-                //////////////////////////////////////////////////////////////////////pawn captured dont forget this
-                return true;
-            }
+            // else if((x1 == x2 + 1 || x1 == x2 - 1) && y2 == y1 - 1 && (x1 == lastmove.x2 + 1 || x1 == lastmove.x2 - 1) && y1 == lastmove.y2 && lastmove.symbol == 'P'){
+            //     board[lastmove.x2][lastmove.y2] = Piece(lastmove.x2, lastmove.y2);
+            //     //////////////////////////////////////////////////////////////////////pawn captured dont forget this
+            //     return true;
+            // }
             else{
                 return false;
             }
@@ -564,14 +583,6 @@ void Board::goodnessScore(User &p1white, User &p2black){
                             cout <<"under attack : "<< x1 << " " << y1 << " by: " << i << " " << k << endl;
                         }
                     }
-                    User::changeTurn();
-                    if(moveValidity(i,k,x1,y1)){
-                        if(board[x1][y1].getSymbol() != '.'){
-                            board[x1][y1].isUnderAttack = true;
-                            cout <<"under attack : "<< x1 << " " << y1 << " by: " << i << " " << k << endl;
-                        }
-                    }
-
                     else{
                         board[x1][y1].isUnderAttack == false;
                     }
@@ -579,29 +590,50 @@ void Board::goodnessScore(User &p1white, User &p2black){
             }
         }
     }
+    User::changeTurn();
+    for(int x1 = 1; x1 <= 8; x1++){
+        for(int y1 = 1; y1 <= 8; y1++){
+            for(int i = 1; i <= 8; i++){
+                for (int k = 1; k <= 8; k++){
+                    if(moveValidity(i,k,x1,y1)){
+                        if(board[x1][y1].getSymbol() != '.'){
+                            board[x1][y1].isUnderAttack = true;
+                            cout <<"under attack : "<< x1 << " " << y1 << " by: " << i << " " << k << endl;
+                        }
+                    }
+                    else{
+                        board[x1][y1].isUnderAttack == false;
+                    }
+                }
+            }
+        }
+    }
+    User::changeTurn();
+
+
     for(int x1 = 1; x1 <= 8; x1++){
         for(int y1 = 1; y1 <= 8; y1++){
             if((board[x1][y1].getColor() == true) && (board[x1][y1].getSymbol() != '.')){
                 if(board[x1][y1].isUnderAttack == true){
 
-                    // cout << "asil point to white : " << board[x1][y1].point << endl;
+                    //cout << "asil point to white : " << board[x1][y1].point << endl;
                     whiteScore += (board[x1][y1].point / 2);
-                    // cout << "added point to white : " << board[x1][y1].point / 2 << endl;
+                    cout << "added point to white : " << board[x1][y1].point / 2 << endl;
                 }
                 else if((board[x1][y1].isUnderAttack == false) && (board[x1][y1].getSymbol() != '.')){
                     whiteScore += board[x1][y1].point;
-                    // cout << "added point to white : " << board[x1][y1].point << endl;
+                    cout << "added point to white : " << board[x1][y1].point << endl;
                 }
             }
             else if((board[x1][y1].getColor() == false) && (board[x1][y1].getSymbol() != '.')){
                 if(board[x1][y1].isUnderAttack == true){
-                    // cout << "asil point to black : " << board[x1][y1].point << endl;
+                    //cout << "asil point to black : " << board[x1][y1].point << endl;
                     blackScore += (board[x1][y1].point / 2);
-                    // cout << "added point to black : " << board[x1][y1].point / 2 << endl;
+                    cout << "added point to black : " << board[x1][y1].point / 2 << endl;
                 }
                 else if((board[x1][y1].isUnderAttack == false) && (board[x1][y1].getSymbol() != '.')){
                     blackScore += board[x1][y1].point;
-                    // cout << "added point to black : " << board[x1][y1].point << endl;
+                    cout << "added point to black : " << board[x1][y1].point << endl;
                 }
             }
         }
@@ -609,12 +641,17 @@ void Board::goodnessScore(User &p1white, User &p2black){
 
     for(int x1 = 1; x1 <= 8; x1++){
         for(int y1 = 1; y1 <= 8; y1++){
-            board[x1][y1].isUnderAttack = false;
+            if((board[x1][y1].getSymbol() != 'k') || (board[x1][y1].getSymbol() != 'K')){
+                continue;
+            }
+            else 
+                board[x1][y1].isUnderAttack = false;
         }
     }
 
     p1white.setScore(whiteScore);
     p2black.setScore(blackScore);
+
 }
 
 int Board::game(){

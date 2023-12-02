@@ -48,6 +48,7 @@ public:
             void setScore(double newscore){score = newscore;}
             static inline bool getTurn() {return turn;}
             static void changeTurn(){turn = !turn;}
+            inline bool getColor() const{return color;}
         private:
             static bool turn;
             bool color;
@@ -62,6 +63,7 @@ public:
 
 
 private:
+    const bool kingSafety(const User &player) const;
     void goodnessScore(User &p1white, User &p2black);
     struct LastMove;
     vector<vector<Piece>> board;
