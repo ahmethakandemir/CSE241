@@ -62,7 +62,7 @@ public:
 
 
 private:
-    void goodnessScore(User p1white, User p2black);
+    void goodnessScore(User &p1white, User &p2black);
     struct LastMove;
     vector<vector<Piece>> board;
     //void updateBoard();
