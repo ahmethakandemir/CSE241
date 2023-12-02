@@ -1,9 +1,10 @@
-all: clear compile run clean 
+all: clear compile run clean
 
 clear: 
 	clear
+
 compile:
-	@g++ rational.cpp
+	@g++ bu.cpp
 run:
 	@./a.out
 clean:

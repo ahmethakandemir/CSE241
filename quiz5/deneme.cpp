@@ -81,13 +81,14 @@ MyStr:: ~MyStr(){
 }
 
 int main(){
-    MyStr s1("hakan"), s2("sample text");
-    cout<<s1.length()<<endl;
-    cout<<s2.length()<<endl;
-    //s1=s2;
-    s1+=s2;
-    MyStr s3(s1);
-    cout<<s1<<endl;
-    cout<<s3<<endl;
-    cout<<s1.length()<<endl;
+    // MyStr s1("hakan"), s2("sample text");
+    // cout<<s1.length()<<endl;
+    // cout<<s2.length()<<endl;
+    // //s1=s2;
+    // // s1+=s2;
+    // // MyStr s3(s1);
+    // cout<<s1<<endl;
+    // // cout<<s3<<endl;
+    // cout<<s1.length()<<endl;
+    return 0;
 }
