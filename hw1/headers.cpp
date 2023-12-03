@@ -44,7 +44,7 @@ public:
     class User{
         public:
             User(bool color);
-            inline double getScore() const{return score;}
+            inline double const getScore() const{return score;}
             void setScore(double newscore){score = newscore;}
             static inline bool getTurn() {return turn;}
             static void changeTurn(){turn = !turn;}
@@ -54,25 +54,29 @@ public:
             bool color;
             double score;
     };
+
+    Board(Board& other);
     friend class Piece;
     Board();
     void printBoard(User p1,User p2);
     void initBoard();
     int modifyMove(char x);
     int game();
+    Board operator =(const Board& other);
 
 
 private:
-    const bool kingSafety(const User &player) const;
-    void goodnessScore(User &p1white, User &p2black);
+    const bool kingSafety() const;
+    double * goodnessScore(User &p1white, User &p2black);
     struct LastMove;
     vector<vector<Piece>> board;
     //void updateBoard();
     Piece getPiece(int x, int y);
-    void inputAndMove(User p1white, User p2black);
-    bool inputValidity(string input);
+    void inputAndMove(User &p1, User &p2);
+    bool inputValidity(string input, User &p1, User &p2);
     bool moveValidity(int x1, int y1, int x2, int y2);
-
+    Board nextmove(User &p1, User &p2);
+    
 
 };
 

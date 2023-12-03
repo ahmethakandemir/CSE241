@@ -12,7 +12,7 @@ Piece::Piece(){
 Piece::Piece(int x, int y) : x(x), y(y){
     isFirstMove = true;
     symbol = '.'; //empty space
-    int point = 0;
+    point = 0;
 }
 
 Piece::Piece(char symbol, int x, int y) : symbol(symbol), x(x), y(y){
@@ -128,17 +128,19 @@ Piece Piece::operator=(const Piece& other){
     return *this;
 }
 
-const bool Board::kingSafety(const User &player)const {
+const bool Board::kingSafety()const {
 
     for(int i = 1; i <= 8; i++){
         for(int j = 1; j <= 8; j++){
-            if(player.getColor() == true && board[i][j].getSymbol() == 'K'){
+            if(board[i][j].getSymbol() == 'K'){
                 if(board[i][j].isUnderAttack == true){
+                    cout << "white king is under attack" << endl;
                     return false;
                 }
             }
-            else if(player.getColor() == false && board[i][j].getSymbol() == 'k'){
+            else if(board[i][j].getSymbol() == 'k'){
                 if(board[i][j].isUnderAttack == true){
+                    cout << "black king is under attack" << endl;
                     return false;
                 }
             } 
@@ -155,7 +157,7 @@ struct Board::LastMove{
     char symbol;
 }lastmove;
 
-void Board::inputAndMove(User p1white, User p2black){
+void Board::inputAndMove(User &p1, User &p2){
 
     int x1, x2, y1, y2;
     
@@ -163,9 +165,11 @@ void Board::inputAndMove(User p1white, User p2black){
     cout << "Enter a move: " << endl;
     string input;
     getline(cin, input);
-    while(!inputValidity(input)){
-        cout << "Invalid input, try again: " << endl;
+    while(!inputValidity(input, p1, p2)){
+    
         getline(cin, input);
+
+        
     }
     x1 = modifyMove(input[0]);
     y1 = modifyMove(input[1]);
@@ -177,8 +181,7 @@ void Board::inputAndMove(User p1white, User p2black){
         cout << "Invalid move, try again: " << endl;
         cout << "Enter a move: " << endl;
         getline(cin, input);
-        while(!inputValidity(input)){
-            cout << "Invalid input, try again: " << endl;
+        while(!inputValidity(input, p1, p2)){
             getline(cin, input);
         }
         x1 = modifyMove(input[0]);
@@ -196,30 +199,27 @@ void Board::inputAndMove(User p1white, User p2black){
     // cout << board[x1][y1].isFirstMove << endl;
     board[x2][y2] = board[x1][y1];
     board[x1][y1] = Piece(x1, y1);
-
-    //check if king is safe
     
-    if(kingSafety(p1white)){
-        cout << "White's king is safe" << endl;
-    }
-    else{
-        cout << "White's king is in check" << endl;
-    }
-    if(kingSafety(p2black)){
-        cout << "Black's king is safe" << endl;
-    }
-    else{
-        cout << "Black's king is in check" << endl;
-    }
 
 }
 
-bool Board::inputValidity(string input){
+bool Board::inputValidity(string input, User &p1, User &p2){
 
     if(input == "q"){
         cout << "...Exitted game..." << endl;
         exit(0);
     }
+    if(input == "suggest"){
+        if(User::getTurn() == true){
+            nextmove(p1, p2);
+        }
+        else if(User::getTurn() == false){
+            nextmove(p2, p1);
+        }
+        cout << "Enter a move: " << endl;
+        return false;
+    }
+    
 
     string valid = "abcdefgh12345678";
     if(input.length() != 4){
@@ -235,15 +235,17 @@ bool Board::inputValidity(string input){
         }
     }
     if(isValid != 0){
+        cout << "Invalid move, try again: " << endl;
         return false;
     }
     if(isalpha(input[0]) && isdigit(input[1]) && isalpha(input[2]) && isdigit(input[3]  )){
         return true;
     }
     else{
+        cout << "Invalid move, try again: " << endl;
         return false;
     }
-    return true;
+    
 }
 
 bool Board::moveValidity(int x1, int y1, int x2, int y2)
@@ -580,9 +582,16 @@ void Board::initBoard(){
     }
 }
 
-void Board::goodnessScore(User &p1white, User &p2black){
+double *Board::goodnessScore(User &p1white, User &p2black)
+{
 
     double whiteScore = 0, blackScore = 0;
+    for(int x1 = 1; x1 <= 8; x1++){
+        for(int y1 = 1; y1 <= 8; y1++){
+            board[x1][y1].isUnderAttack = false;
+        }
+    }
+
     // cout << "inside" << endl;
     for(int x1 = 1; x1 <= 8; x1++){
         for(int y1 = 1; y1 <= 8; y1++){
@@ -662,8 +671,81 @@ void Board::goodnessScore(User &p1white, User &p2black){
 
     p1white.setScore(whiteScore);
     p2black.setScore(blackScore);
+    double * score = new double[2];
+    score[0] = whiteScore;
+    score[1] = blackScore;
+    return score;
+}
+
+Board::Board(Board& other){
+    board.resize(9);
+    for(int i = 1; i < 9; i++){
+        board[i].resize(9);
+    }
+    for(int i = 1; i < 9; i++){
+        for(int j = 1; j < 9; j++){
+            board[i][j] = other.board[i][j];
+        }
+    }
+}
+
+Board Board::operator=(const Board& other){
+    board.resize(9);
+    for(int i = 1; i < 9; i++){
+        board[i].resize(9);
+    }
+    for(int i = 1; i < 9; i++){
+        for(int j = 1; j < 9; j++){
+            board[i][j] = other.board[i][j];
+        }
+    }
+    return *this;
+}
+
+Board Board::nextmove(User &p1, User &p2){
+    Board newBoard(*this);
+    Board tempboard;
+    double tempscore = -99;
+    int tempx,tempy,tempx1,tempy1;
+    for(int x1 = 1; x1 <= 8; x1++){
+        for(int y1 = 1; y1 <= 8; y1++){
+            for(int i = 1; i <= 8; i++){
+                for (int k = 1; k <= 8; k++){
+                    if(moveValidity(i,k,x1,y1)){
+                        newBoard.board[i][k] = newBoard.board[x1][y1];
+                        newBoard.board[x1][y1] = Piece(x1, y1);
+                        if(p1.getColor() == true && (newBoard.goodnessScore(p1, p2)[0] - newBoard.goodnessScore(p1,p2)[1]) > tempscore){
+                            tempscore = newBoard.goodnessScore(p1, p2)[0] - newBoard.goodnessScore(p1,p2)[1];
+                            tempboard = newBoard;
+                            tempx = i;
+                            tempy = k;
+                            tempx1 = x1;
+                            tempy1 = y1;
+                        }
+                        else if(p1.getColor() == false && newBoard.goodnessScore(p1, p2)[1] - newBoard.goodnessScore(p1,p2)[0] > tempscore){
+                            tempscore = newBoard.goodnessScore(p1, p2)[1] - newBoard.goodnessScore(p1,p2)[0];
+                            tempboard = newBoard;
+                            tempx = i;
+                            tempy = k;
+                            tempx1 = x1;
+                            tempy1 = y1;
+                        }    
+                    }
+                    newBoard = *this;
+                }
+            }
+        }
+    }
+
+
+
+    cout << "Suggested move: " << endl;
+    cout << char(tempx + 96) << tempy << char(tempx1+96) << tempy1 << endl;
+    return tempboard;
 
 }
+
+
 
 int Board::game(){
 
@@ -672,13 +754,25 @@ int Board::game(){
     printBoard(p1white,p2black);
 
     while(true){
-        inputAndMove(p1white,p2black);
-        User::changeTurn();
-        goodnessScore(p1white, p2black);
+        Board lastboard(*this);
+        if(kingSafety() == false){
+            while (kingSafety() == false)
+            {
+                inputAndMove(p1white, p2black);
+                goodnessScore(p1white, p2black);
+            }
+            User::changeTurn();
+        }
+        else{
+            inputAndMove(p1white, p2black);
+            User::changeTurn();
+            goodnessScore(p1white, p2black);
+        }
+        
         printBoard(p1white,p2black);
+    
     }
     return 0;
-
 }   
 
 
