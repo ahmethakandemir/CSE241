@@ -250,6 +250,9 @@ bool Board::inputValidity(string input, User &p1, User &p2){
 
 bool Board::moveValidity(int x1, int y1, int x2, int y2)
 {
+    if(kingSafety() == false){
+        return false;
+    }
     //check if there is a piece at the source location
     if(board[x1][y1].getSymbol() == '.'){
         return false;
@@ -604,7 +607,7 @@ double *Board::goodnessScore(User &p1white, User &p2black)
                         }
                     }
                     else{
-                        board[x1][y1].isUnderAttack == false;
+                        board[x1][y1].isUnderAttack = false;
                     }
                 }
             }
@@ -622,7 +625,7 @@ double *Board::goodnessScore(User &p1white, User &p2black)
                         }
                     }
                     else{
-                        board[x1][y1].isUnderAttack == false;
+                        board[x1][y1].isUnderAttack = false;
                     }
                 }
             }
@@ -737,7 +740,16 @@ Board Board::nextmove(User &p1, User &p2){
         }
     }
 
-
+    if(tempscore <= -99){
+        cout << "It's checkmate" << endl;
+        if(p1.getColor() == true){
+            cout << "Black wins" << endl;
+        }
+        else{
+            cout << "White wins" << endl;
+        }
+        exit(0);
+    }
 
     cout << "Suggested move: " << endl;
     cout << char(tempx + 96) << tempy << char(tempx1+96) << tempy1 << endl;
