@@ -1,7 +1,7 @@
 all: compile run clean 
 
 compile:
-	@g++ main.cpp
+	@g++ mainn.cpp
 run:
 	@./a.out
 clean:

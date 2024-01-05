@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/hakan/Desktop/241",
-      "program": "c:/Users/hakan/Desktop/241/build/Debug/outDebug",
+      "cwd": "c:/Users/hakan/Desktop/241/virtuals",
+      "program": "c:/Users/hakan/Desktop/241/virtuals/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

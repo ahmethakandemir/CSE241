@@ -7,9 +7,9 @@
       "request": "launch",
       "args": [],
       "stopAtEntry": false,
-      "externalConsole": true,
-      "cwd": "c:/Users/hakan/Desktop/241",
-      "program": "c:/Users/hakan/Desktop/241/build/Debug/outDebug",
+      "externalConsole": false,
+      "cwd": "/mnt/c/Users/hakan/Desktop/241/inheritance",
+      "program": "/mnt/c/Users/hakan/Desktop/241/inheritance/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
