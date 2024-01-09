@@ -1,0 +1,10 @@
+
+/root
+/root/hakan
+/root/hakan/bahar
+/hakan/root/hakan [~[file1.txt~~~~ZOOOOOOOORRRTTTT]~]
+
+/root/ebrar
+/root/ebrar/osman
+/root/ebrar/halis
+/ebrar/root/ebrar [~[a.txt~~~~ZOOOOOOOORRRTTTT]~]
