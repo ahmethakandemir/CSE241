@@ -4,6 +4,7 @@
 #include <cstring>
 #include <fstream>
 #include <vector>
+
 using namespace std;
 
 class Directory; // Forward declaration
@@ -104,7 +105,6 @@ void MyShell::cp(const string &pathname)
         }
         catch (...)
         {
-            
         }
     }
     catch (...)
@@ -340,7 +340,8 @@ void MyShell::cd(const string &name)
         currentDirectory = currentDirectory->parent;
         return;
     }
-    else{
+    else
+    {
         for (const auto &directory : currentDirectory->directories)
         {
             if (directory->name == name)
@@ -377,7 +378,8 @@ void MyShell::cd(const string &name)
             {
                 path += name[j];
             }
-            if(j == name.size() - 1){
+            if (j == name.size() - 1)
+            {
                 paths.push_back(path);
             }
         }
@@ -386,8 +388,8 @@ void MyShell::cd(const string &name)
         {
             cd(paths[j]);
         }
-
     }
+    cout << "cd: no such file or directory: " << name << endl;
 }
 
 void Directory::start()
@@ -449,13 +451,6 @@ void Directory::start()
             cin >> name;
             currentDirectory->rm(name);
         }
-        else if (command == "print")
-        {
-            string file = "db.txt";
-            ofstream filename(file);
-
-            root->printToFile(filename);
-        }
         else if (command == "cp")
         {
             string pathname;
@@ -475,9 +470,23 @@ void Directory::start()
                 }
             }
         }
-        else if (command == "display")
+        else if (command == "clear")
         {
-            currentDirectory->display();
+            system("clear");
+        }
+        else if (command == "help")
+        {
+            cout << "mkdir <name> : create a directory" << endl;
+            cout << "cd <name> : change directory" << endl;
+            cout << "pwd : print working directory" << endl;
+            cout << "ls : list directory contents" << endl;
+            cout << "rmdir <name> : remove directory" << endl;
+            cout << "rm <name> : remove file" << endl;
+            cout << "print : print the file system to db.txt" << endl;
+            cout << "cp <pathname> : copy file to current directory" << endl;
+            cout << "cat <name> : display file content" << endl;
+            cout << "clear : clear the terminal" << endl;
+            cout << "exit : exit the terminal" << endl;
         }
         else if (command == "clear")
         {
@@ -488,8 +497,12 @@ void Directory::start()
         {
             cout << "invalid command" << endl;
         }
+        string file = "db.txt";
+        ofstream filename(file);
+        root->printToFile(filename);
     }
 }
+
 
 int main()
 {

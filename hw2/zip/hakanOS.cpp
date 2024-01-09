@@ -1,13 +1,5 @@
 #include "hakanOS.h"
-#include <iostream>
-#include <list>
-#include <string>
-#include <cstring>
-#include <fstream>
-#include <vector>
 
-namespace hakanOS{
-    
 using namespace std;
 
 string File::displayContent() const
@@ -494,4 +486,3 @@ void Directory::start()
         root->printToFile(filename);
     }
 }
-} // namespace hakanOS

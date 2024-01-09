@@ -1,3 +1,6 @@
+#ifndef HAKANOS_H
+#define HAKANOS_H
+
 #include <iostream>
 #include <list>
 #include <string>
@@ -74,3 +77,4 @@ public:
 
 }
 
+#endif // HAKANOS_H
