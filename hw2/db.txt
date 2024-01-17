@@ -1,6 +1,0 @@
-
-/root
-/root/hakan
-/root/ebrar
-/root/ebrar/halis
-/ebrar/root/ebrar [~[a.txt~~~~deneme]~]

@@ -1,7 +1,7 @@
 all: compile run clean 
 
 compile:
-	@g++ ebrosuma.cpp
+	@g++ main.cpp
 run:
 	@./a.out
 clean:
