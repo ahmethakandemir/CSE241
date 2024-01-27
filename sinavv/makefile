@@ -4,7 +4,7 @@ clear:
 	clear
 
 compile:
-	@g++ bu.cpp
+	@g++ main.cpp
 run:
 	@./a.out
 clean:

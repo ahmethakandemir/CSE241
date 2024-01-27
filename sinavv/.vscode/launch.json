@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/hakan/Desktop/241/hw2",
-      "program": "c:/Users/hakan/Desktop/241/hw2/build/Debug/outDebug",
+      "cwd": "c:/Users/hakan/Desktop/241/sinavv",
+      "program": "c:/Users/hakan/Desktop/241/sinavv/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
